@@ -1,0 +1,18 @@
+{
+  "name": "tmaf-node-server",
+  "version": "0.0.1",
+  "description": "node server to deal with clients made on different frameworks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "server",
+    "ndoe"
+  ],
+  "author": "minhaz",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
