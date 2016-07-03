@@ -13,6 +13,9 @@
   "author": "minhaz",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.14.0"
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "node-json-db": "^0.7.2",
+    "sprintf": "^0.1.5"
   }
 }
