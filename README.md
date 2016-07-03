@@ -3,8 +3,9 @@ Trying to learn different frameworks, so will create a simple todo manager clien
 
 ### Server: 
  - [ ] Node.JS, MongoDB
- - [ ] Node.JS, json server
+ - [x] Node.JS, json server
  - [ ] PHP 7, json server
+
 ### Frameworks
  - [ ] React.JS
  - [ ] Angular2, Typescript
