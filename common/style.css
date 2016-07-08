@@ -1,0 +1,25 @@
+body { margin: 0px; padding: 0px; }
+.workspace {
+	max-width: 400px;
+	min-height: 700px;
+	border: 1px solid #e8e5e5;
+}
+
+.header {
+	background: #e8e5e5;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    text-transform: lowercase;
+}
+
+.add {
+    width: 377px;
+    padding: 10px;
+}
+
+.list div {
+    padding: 10px 10px 10px 10px;
+    border-bottom: 1px solid #dfdfdf;
+    background: rgba(130, 130, 130, 0.08);
+}

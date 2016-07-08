@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>React TODO Manager</title>
+        <link rel="stylesheet" href="../common/style.css">
+        <script src="build/react.js"></script>
+        <script src="build/react-dom.js"></script>
+        <script src="build/browser.min.js"></script>
+        <script src="../common/jquery-1.11.1.js"></script>
+    </head>
+    <body>
+        <div id="body"></div>
+        <script type="text/babel">
+            // Global variabls
+            var url = "http://localhost:3000/";
+
+            // React Components
+            var ADD = React.createClass({
+                getInitialState: function () {
+                    return {data: ''};
+                },
+                handleTODOChange: function(e) {
+                    this.setState({data: e.target.value});
+                },
+                handleKeyPress: function(e) {
+                    // If keypress is
+                    if (e.which == 13) {
+                        $.ajax({
+                            method: 'POST',
+                            url: url +'create',
+                            dataType: 'json',
+                            data: {title: e.target.value},
+                            success: function (data) {
+                                this.setState({data: ''});
+                                this.props.handleADDEvent(data);
+                            }.bind(this)
+                        });
+                    }
+                },
+                render: function() {
+                    return (
+                        <div>
+                            <input
+                            value={this.state.data}
+                            placeholder="Add.."
+                            className="add"
+                            onChange={this.handleTODOChange}
+                            onKeyPress={this.handleKeyPress}
+                            />
+                        </div>
+                    );
+                }
+            });
+
+            var HEADER = React.createClass({
+                render: function () {
+                    return (
+                        <div className="header">
+                            <div>To-do Manager</div>
+                        </div>
+                    );
+                }
+            });
+
+            var TODO = React.createClass({
+                render: function() {
+                    return (
+                        <div data-id={this.props.data.ID}>
+                            <input
+                            type="checkbox"
+                            data-id={this.props.data.ID}
+                            onChange={this.props.markAsDone} />
+                            &nbsp;
+                            {this.props.data.title}
+                        </div>
+                    );
+                }
+            });
+
+            var TODOLIST = React.createClass({
+                render: function() {
+                    return (
+                        <div className="list">
+                        {
+                            this.props.data.map(function(todo) {
+                                return (
+                                    <TODO data={todo} key={todo.at} markAsDone={this.props.markAsDone} />
+                                );
+                            }.bind(this))
+                        }
+                        </div>
+                    );
+                }
+            });
+
+            var TM = React.createClass({
+                getInitialState: function() {
+                    return {data: []};
+                },
+                componentDidMount: function() {
+                    $.ajax({
+                        url: this.props.url,
+                        dataType: 'json',
+                        method: 'GET',
+                        success: function(data) {
+                            this.setState({data: data.todo});
+                        }.bind(this),
+                        error: function(xhr, status, err) {
+                            console.error(this.props.url, status, err.toString());
+                        }.bind(this)
+                    });
+                },
+                AddEvent: function(data) {
+                    this.setState({data: data.data})
+                },
+                markTodoAsDone: function(e) {
+                    e.target.parentElement.style.textDecoration = 'line-through';
+                    // pass this info to server
+                    var id = e.target.getAttribute('data-id');
+
+                    // issue AJAX
+                    $.ajax({
+                        url: url +'delete',
+                        dataType: 'json',
+                        method: 'POST',
+                        data: {ID: id,},
+                        success: function(data) {
+                            this.setState({data: data.data});
+                        }.bind(this),
+                        error: function(xhr, status, err) {
+                            console.error(this.props.url, status, err.toString());
+                        }.bind(this)
+                    });
+                },
+                render: function () {
+                    return (
+                        <div className="workspace">
+                            <HEADER />
+                            <ADD handleADDEvent={this.AddEvent}/>
+                            <TODOLIST data={this.state.data} markAsDone={this.markTodoAsDone} />
+                        </div>
+                    );
+                }
+            });
+
+            ReactDOM.render(
+                <TM url="http://localhost:3000/select" />,
+                document.getElementById('body')
+            );
+        </script>
+    </body>
+</html>
