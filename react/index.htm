@@ -57,7 +57,7 @@
                 render: function () {
                     return (
                         <div className="header">
-                            <div>To-do Manager</div>
+                            <div>To-do Manager (React JS)</div>
                         </div>
                     );
                 }
@@ -66,7 +66,10 @@
             var TODO = React.createClass({
                 render: function() {
                     return (
-                        <div data-id={this.props.data.ID}>
+                        <div 
+                        data-id={this.props.data.ID}
+                        data-todo={this.props.data.title}
+                        onDoubleClick={this.props.showEditPrompt}>
                             <input
                             type="checkbox"
                             data-id={this.props.data.ID}
@@ -85,7 +88,11 @@
                         {
                             this.props.data.map(function(todo) {
                                 return (
-                                    <TODO data={todo} key={todo.at} markAsDone={this.props.markAsDone} />
+                                    <TODO 
+                                    data={todo}
+                                    key={todo.at}
+                                    markAsDone={this.props.markAsDone}
+                                    showEditPrompt={this.props.showEditPrompt} />
                                 );
                             }.bind(this))
                         }
@@ -104,7 +111,7 @@
                         dataType: 'json',
                         method: 'GET',
                         success: function(data) {
-                            this.setState({data: data.todo});
+                            this.setState({data: data});
                         }.bind(this),
                         error: function(xhr, status, err) {
                             console.error(this.props.url, status, err.toString());
@@ -112,7 +119,7 @@
                     });
                 },
                 AddEvent: function(data) {
-                    this.setState({data: data.data})
+                    this.setState({data: data})
                 },
                 markTodoAsDone: function(e) {
                     e.target.parentElement.style.textDecoration = 'line-through';
@@ -126,7 +133,24 @@
                         method: 'POST',
                         data: {ID: id,},
                         success: function(data) {
-                            this.setState({data: data.data});
+                            this.setState({data: data});
+                        }.bind(this),
+                        error: function(xhr, status, err) {
+                            console.error(this.props.url, status, err.toString());
+                        }.bind(this)
+                    });
+                },
+                showEditPrompt: function(e) {
+                    var title = prompt("New Todo Text", e.target.getAttribute('data-todo'));
+                    var id = e.target.getAttribute('data-id');
+                    // issue AJAX
+                    $.ajax({
+                        url: url +'update',
+                        dataType: 'json',
+                        method: 'POST',
+                        data: {ID: id, title: title},
+                        success: function(data) {
+                            this.setState({data: data});
                         }.bind(this),
                         error: function(xhr, status, err) {
                             console.error(this.props.url, status, err.toString());
@@ -138,7 +162,10 @@
                         <div className="workspace">
                             <HEADER />
                             <ADD handleADDEvent={this.AddEvent}/>
-                            <TODOLIST data={this.state.data} markAsDone={this.markTodoAsDone} />
+                            <TODOLIST
+                            data={this.state.data}
+                            markAsDone={this.markTodoAsDone}
+                            showEditPrompt={this.showEditPrompt} />
                         </div>
                     );
                 }
