@@ -7,7 +7,7 @@ Trying to learn different frameworks, so will create a simple todo manager clien
  - [ ] PHP 7, json server
 
 ### Frameworks
- - [ ] React.JS
+ - [x] React.JS
  - [ ] Angular2, Typescript
  - [ ] Angular2, JS
  - [ ] Meteor
