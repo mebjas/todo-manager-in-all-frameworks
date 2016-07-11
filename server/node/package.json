@@ -10,6 +10,9 @@
     "server",
     "ndoe"
   ],
+  "scripts" : {
+    "start" : "node server.js"
+  },
   "author": "minhaz",
   "license": "MIT",
   "dependencies": {

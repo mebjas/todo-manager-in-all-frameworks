@@ -13,13 +13,17 @@ const serverConfig = require('./config.js').server;
 const db = new jsonDB("tempDB", true, false);
 const app = express();
 
-app.use(bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+// to support JSON-encoded bodies
+app.use(bodyParser.json() );
+
+// to support URL-encoded bodies
+app.use(bodyParser.urlencoded({
   extended: true
 })); 
 
 // TODO: Correct the usage of this middleware
-// a middleware function with no mount path. This code is executed for every request to the router
+// a middleware function with no mount path.
+// This code is executed for every request to the router
 app.use(function (req, res, next) {
 	res.set('Access-Control-Allow-Origin', '*');
 	res.set('Access-Control-Allow-Methods','GET,POST');
@@ -27,7 +31,8 @@ app.use(function (req, res, next) {
 	next();
 });
 
-function sendTodos(req, res) {
+// Function to retrieve data from DB and send to server
+var sendTodos = function (req, res) {
 	try {
 		var data = db.getData("/todo");
 		data.forEach(function(obj, index) {
@@ -51,9 +56,7 @@ app.get('/select', function(req, res){
 // Uodate a todo
 app.post('/update', function(req, res){
 	console.log("UPDATE REQEUST");
-
-	var title = '';
-	var ID = 0;
+	var title = '', ID = 0;
 	try {
 		title = req.body.title;
 		ID = req.body.ID;
@@ -65,12 +68,14 @@ app.post('/update', function(req, res){
 	var at = new Date().getTime();
 	db.push(sprintf("/todo[%s]", ID), {title: title, at: at});
 
+	// send response with all data
 	res = sendTodos(req, res);
 });
 
 // Create a todo
 app.post('/create', function(req, res){
-	res.set('Access-Control-Allow-Origin', '*');
+	console.log("CREATE REQEUST");
+
 	var title = '';
 	try {
 		title = req.body.title;
@@ -92,7 +97,8 @@ app.post('/create', function(req, res){
 
 // Delete a todo
 app.post('/delete', function(req, res){
-	res.set('Access-Control-Allow-Origin', '*');
+	console.log("DELETE REQEUST");
+
 	var ID;
 	try {
 		ID = req.body.ID;
